@@ -4,7 +4,7 @@ from django.views.generic import (ListView, TemplateView, DetailView,
 from .models import Post,Comment
 from django.urls import reverse_lazy
 from django.utils import timezone
-from .forms import PostForm, CommmentForm
+from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -60,26 +60,26 @@ def add_comment_to_post(request, pk):
             comment = form.save(commit=False)
             comment.post = post
             comment.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('blog:post_detail', pk=post.pk)
     else:
-        form = CommmentForm()
+        form = CommentForm()
     return render(request, 'blog/comment_form.html', {'form':form})
 
 @login_required
 def comment_approve(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.approve()
-    return redirect('post_detail', pk=post.pk)
+    return redirect('blog:post_detail', pk=post.pk)
 
 @login_required
 def comment_remove(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     post_pk = comment.post.pk
     comment.delete()
-    return redirect('post_detail', pk=post_pk)
+    return redirect('blog:post_detail', pk=post_pk)
 
 @login_required
 def post_publish(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.publish()
-    return redirect('post_detail', pk=pk)
+    return redirect('blog:post_detail', pk=pk)
